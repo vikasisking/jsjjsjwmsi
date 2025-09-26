@@ -236,7 +236,7 @@ async def remove_chat(update, context: ContextTypes.DEFAULT_TYPE):
 
 # /start handler
 async def start_command(update, context: ContextTypes.DEFAULT_TYPE):
-    await update.message.reply_text("✅ Bot is Active & Running! Contact If Any Problem @Vxxwo")
+    await update.message.reply_text("✅ Bot is Active & Running! Contact If Any Problem @hiden_25")
 
 def start_telegram_listener():
     tg_app = Application.builder().token(BOT_TOKEN).build()
