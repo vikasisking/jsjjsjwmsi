@@ -1,5 +1,9 @@
 requests
 beautifulsoup4
-flask
+Flask
 python-telegram-bot
 pycountry
+pymongo
+dnspython
+asyncio
+html5lib
