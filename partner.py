@@ -18,7 +18,7 @@ import hashlib
 from bs4 import BeautifulSoup
 import logging
 from datetime import datetime
-from pymongo import MongoClient
+#from pymongo import MongoClient
 
 # Setup logging
 logging.basicConfig(level=logging.INFO)
@@ -71,38 +71,38 @@ message_queue = queue.Queue()
 
 # ---------------- MONGO DB SETUP ----------------
 # Edit this URI if needed or set via env vars
-MONGO_URI = os.getenv("MONGO_URI", "mongodb+srv://number25:number25@cluster0.kdeklci.mongodb.net/")
-MONGO_DB_NAME = os.getenv("MONGO_DB_NAME", "otp_database")
-MONGO_COLLECTION_NAME = os.getenv("MONGO_COLLECTION_NAME", "numbers")
+#MONGO_URI = os.getenv("MONGO_URI", "mongodb+srv://number25:number25@cluster0.kdeklci.mongodb.net/")
+#MONGO_DB_NAME = os.getenv("MONGO_DB_NAME", "otp_database")
+#MONGO_COLLECTION_NAME = os.getenv("MONGO_COLLECTION_NAME", "numbers")
 
 numbers_collection = None
-try:
-    mongo_client = MongoClient(MONGO_URI, serverSelectionTimeoutMS=5000)
-    mongo_db = mongo_client[MONGO_DB_NAME]
-    numbers_collection = mongo_db[MONGO_COLLECTION_NAME]
+#try:
+ #   mongo_client = MongoClient(MONGO_URI, serverSelectionTimeoutMS=5000)
+  #  mongo_db = mongo_client[MONGO_DB_NAME]
+   # numbers_collection = mongo_db[MONGO_COLLECTION_NAME]
     # Test connection
-    mongo_client.server_info()
-    logger.info("✅ Connected to MongoDB")
-except Exception as e:
-    logger.error(f"❌ MongoDB connection failed: {e}")
-    numbers_collection = None  # safe fallback
+    #mongo_client.server_info()
+    #logger.info("✅ Connected to MongoDB")
+#except Exception as e:
+ #   logger.error(f"❌ MongoDB connection failed: {e}")
+  #  numbers_collection = None  # safe fallback
 
-def save_number_to_db(number: str):
-    """Save unique number to MongoDB (if available)"""
-    if not number or numbers_collection is None:
-        return
-    try:
-        number = number.strip()
-        if not numbers_collection.find_one({"number": number}):
-            numbers_collection.insert_one({
-                "number": number,
-                "timestamp": datetime.now()
-            })
-            logger.info(f"✅ Saved to MongoDB: {number}")
-        else:
-            logger.debug(f"⚠️ Number already in DB: {number}")
-    except Exception as e:
-        logger.error(f"❌ MongoDB insert error: {e}")
+#def save_number_to_db(number: str):
+ #   """Save unique number to MongoDB (if available)"""
+  #  if not number or numbers_collection is None:
+   #     return
+    #try:
+     #   number = number.strip()
+      #  if not numbers_collection.find_one({"number": number}):
+       #     numbers_collection.insert_one({
+        #        "number": number,
+         #       "timestamp": datetime.now()
+          #  })
+           # logger.info(f"✅ Saved to MongoDB: {number}")
+       # else:
+        #    logger.debug(f"⚠️ Number already in DB: {number}")
+    #except Exception as e:
+     #   logger.error(f"❌ MongoDB insert error: {e}")
 
 # ---------------- DATA FUNCTIONS ----------------
 def load_data():
@@ -405,10 +405,10 @@ def main_loop():
                     new_found = True
 
                     # Save number to MongoDB
-                    try:
-                        save_number_to_db(number)
-                    except Exception as e:
-                        logger.error(f"Error saving number to DB: {e}")
+                    #try:
+                      #  save_number_to_db(number)
+                    #except Exception as e:
+                        #logger.error(f"Error saving number to DB: {e}")
 
                     log_formatted = (
                         f"📱 Number:      {number}\n"
