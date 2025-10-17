@@ -512,9 +512,12 @@ def start(message):
         bot.send_message(chat_id, "❌ No countries available yet.")
         return
 
-    markup = types.InlineKeyboardMarkup()
+        markup = types.InlineKeyboardMarkup()
     for country in sorted(numbers_by_country.keys()):
-        markup.add(types.InlineKeyboardButton(country, callback_data=f"user_select_{country}"))
+        count = len(numbers_by_country.get(country, []))
+        flag = country_to_flag(country)
+        btn_text = f"{flag} {country} ({count} numbers)"
+        markup.add(types.InlineKeyboardButton(btn_text, callback_data=f"user_select_{country}"))
     msg = bot.send_message(chat_id, "🌍 Choose a country:", reply_markup=markup)
     user_messages[chat_id] = msg
 
