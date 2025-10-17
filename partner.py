@@ -512,7 +512,7 @@ def start(message):
         bot.send_message(chat_id, "❌ No countries available yet.")
         return
 
-        markup = types.InlineKeyboardMarkup()
+    markup = types.InlineKeyboardMarkup()
     for country in sorted(numbers_by_country.keys()):
         count = len(numbers_by_country.get(country, []))
         flag = country_to_flag(country)
