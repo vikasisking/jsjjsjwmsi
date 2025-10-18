@@ -25,7 +25,7 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 # ---------------- CONFIG ----------------
-BOT_TOKEN = "8210296135:AAFpWPrfUwq96xCbTl1L9pSUbWJbYcYNHYk"
+BOT_TOKEN = "8079330430:AAFZNzmPbYoMZT_o-eQ9lWPlHEQ7DTtw56o"
 ADMIN_ID = 8093935563
 bot = telebot.TeleBot(BOT_TOKEN)
 
@@ -39,7 +39,7 @@ XHR_URL = "http://51.83.103.80/ints/agent/res/data_smscdr.php?fdate1=2025-09-05%
 USERNAME = os.getenv("USERNAME", "h2ideveloper898")
 PASSWORD = os.getenv("PASSWORD", "112233")
 
-OTP_GROUP_IDS = ["-1003149178011"]  # updated with multiple group IDs (default)
+OTP_GROUP_IDS = ["1001926462756"]  # updated with multiple group IDs (default)
 CHANNEL_LINK = "https://t.me/freeotpss"
 BACKUP = "https://t.me/frrrotpss"
 DEVELOPER_ID = "@Rishifreeotp6bot"
@@ -68,41 +68,7 @@ temp_uploads = {}          # admin_id -> list of numbers
 user_numbers = {}          # number -> chat_id
 seen_messages = set()
 message_queue = queue.Queue()
-
-# ---------------- MONGO DB SETUP ----------------
-# Edit this URI if needed or set via env vars
-#MONGO_URI = os.getenv("MONGO_URI", "mongodb+srv://number25:number25@cluster0.kdeklci.mongodb.net/")
-#MONGO_DB_NAME = os.getenv("MONGO_DB_NAME", "otp_database")
-#MONGO_COLLECTION_NAME = os.getenv("MONGO_COLLECTION_NAME", "numbers")
-
 numbers_collection = None
-#try:
- #   mongo_client = MongoClient(MONGO_URI, serverSelectionTimeoutMS=5000)
-  #  mongo_db = mongo_client[MONGO_DB_NAME]
-   # numbers_collection = mongo_db[MONGO_COLLECTION_NAME]
-    # Test connection
-    #mongo_client.server_info()
-    #logger.info("✅ Connected to MongoDB")
-#except Exception as e:
- #   logger.error(f"❌ MongoDB connection failed: {e}")
-  #  numbers_collection = None  # safe fallback
-
-#def save_number_to_db(number: str):
- #   """Save unique number to MongoDB (if available)"""
-  #  if not number or numbers_collection is None:
-   #     return
-    #try:
-     #   number = number.strip()
-      #  if not numbers_collection.find_one({"number": number}):
-       #     numbers_collection.insert_one({
-        #        "number": number,
-         #       "timestamp": datetime.now()
-          #  })
-           # logger.info(f"✅ Saved to MongoDB: {number}")
-       # else:
-        #    logger.debug(f"⚠️ Number already in DB: {number}")
-    #except Exception as e:
-     #   logger.error(f"❌ MongoDB insert error: {e}")
 
 # ---------------- DATA FUNCTIONS ----------------
 def load_data():
@@ -403,13 +369,7 @@ def main_loop():
                         continue
                     seen_messages.add(hash_id)
                     new_found = True
-
-                    # Save number to MongoDB
-                    #try:
-                      #  save_number_to_db(number)
-                    #except Exception as e:
-                        #logger.error(f"Error saving number to DB: {e}")
-
+                    
                     log_formatted = (
                         f"📱 Number:      {number}\n"
                         f"🏷️ Sender ID:   {sender}\n"
