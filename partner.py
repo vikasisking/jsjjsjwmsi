@@ -321,12 +321,13 @@ def format_message(record, personal=False):
         formatted = (
             f"{flag} New {country} {sender} OTP Recived \n\n"
             f"<blockquote>🕰 <b>Time:</b> <b>{html.escape(str(dt))}</b></blockquote>\n"
-            f"<blockquote>🌍 <b>Country:</b> <b>{html.escape(country)} {flag}</b></blockquote>\n            "
+            f"<blockquote>🌍 <b>Country:</b> <b>{html.escape(country)} {flag}</b></blockquote>\n"
             f"<blockquote>📱 <b>Service:</b> <b>{html.escape(sender)}</b></blockquote>\n"
             f"<blockquote>📞 <b>Number:</b> <b>{html.escape(mask_number(number))}</b></blockquote>\n"
             f"<blockquote>{otp_line}</blockquote>"
             f"<blockquote>✉️ <b>Full Message:</b></blockquote>\n"
             f"<blockquote><code>{html.escape(message)}</code></blockquote>\n\n"
+            f"<blockquote>💥 <b>Powered By: @freeotpss </b></blockquote>\n"
         )
     return formatted, number
 
