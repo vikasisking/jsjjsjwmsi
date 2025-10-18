@@ -67,6 +67,9 @@ user_current_country = {}  # chat_id -> selected country
 temp_uploads = {}          # admin_id -> list of numbers
 user_numbers = {}          # number -> chat_id
 seen_messages = set()
+# --- Low Inventory Settings ---
+LOW_INVENTORY_THRESHOLD = 10  # alert when below this number
+LAST_ALERTED = {}  # to prevent repeated alerts
 message_queue = queue.Queue()
 numbers_collection = None
 
@@ -387,16 +390,73 @@ def main_loop():
                         "message": message
                     }
 
+                                        # send public group message
                     msg_group, _ = format_message(record, personal=False)
                     keyboard = types.InlineKeyboardMarkup()
                     keyboard.add(types.InlineKeyboardButton("📱 Channel", url=CHANNEL_LINK))
                     keyboard.add(types.InlineKeyboardButton("🚀 Panel", url=f"https://t.me/{DEVELOPER_ID.lstrip('@')}"))
                     message_queue.put((msg_group, OTP_GROUP_IDS, keyboard))
 
+                    # send personal message if this number was assigned to a user
                     chat_id = user_numbers.get(number)
                     if chat_id:
                         msg_personal, _ = format_message(record, personal=True)
                         message_queue.put((msg_personal, [chat_id]))
+
+                    # --- 🗑️ Auto Remove Used Number From Memory + File ---
+                    try:
+                        # Normalize keys/number formats to match file entries
+                        country_key = str(country).strip()
+                        num_key = str(number).lstrip("+").strip()
+
+                        if country_key in numbers_by_country:
+                            numbers_list = [n.lstrip("+").strip() for n in numbers_by_country.get(country_key, [])]
+                            if num_key in numbers_list:
+                                numbers_list.remove(num_key)
+                                numbers_by_country[country_key] = numbers_list
+
+                                # 1️⃣ Update the country’s .txt file
+                                file_path = os.path.join(NUMBERS_DIR, f"{country_key}.txt")
+                                with open(file_path, "w", encoding="utf-8") as wf:
+                                    wf.write("\n".join(numbers_list))
+
+                                # 2️⃣ Save JSON (bot_data.json)
+                                save_data()
+
+                                # 3️⃣ Remove from user mapping so no reuse
+                                if num_key in user_numbers:
+                                    del user_numbers[num_key]
+
+                                # 4️⃣ Log usage history
+                                with open("used_numbers.txt", "a", encoding="utf-8") as used:
+                                    used.write(f"{datetime.now().isoformat()} | {country_key} | {num_key}\n")
+
+                                # 5️⃣ Print progress in console
+                                logger.info(f"🗑️ Number {num_key} removed from {country_key}. Remaining: {len(numbers_list)}")
+                    except Exception as e:
+                        logger.error(f"❌ Error while removing used number {number}: {e}")
+                    
+                    try:
+                                    remaining = len(numbers_list)
+                                    if remaining <= LOW_INVENTORY_THRESHOLD:
+                                        last_alert = LAST_ALERTED.get(country_key, 0)
+                                        # Alert again only if more than 1 hour has passed since last alert
+                                        if (time.time() - last_alert) > 3600:
+                                            alert_msg = (
+                                                f"⚠️ *Low Numbers Alert*\n"
+                                                f"🌍 Country: {country_key}\n"
+                                                f"📞 Remaining: {remaining} numbers\n"
+                                                f"📁 File: `numbers/{country_key}.txt`"
+                                            )
+                                            bot.send_message(
+                                                ADMIN_ID,
+                                                alert_msg,
+                                                parse_mode="Markdown"
+                                            )
+                                            LAST_ALERTED[country_key] = time.time()
+                                            logger.warning(f"⚠️ Low inventory alert sent for {country_key} ({remaining} left)")
+                    except Exception as e:
+                        logger.error(f"❌ Low inventory alert error: {e}")
 
             if not new_found:
                 logger.info("⏳ No new OTPs.")
@@ -529,6 +589,19 @@ def set_country(message):
         bot.reply_to(message, f"✅ Current country set to: {current_country}")
     else:
         bot.reply_to(message, "Usage: /setcountry <country name>")
+
+@bot.message_handler(commands=["remaining"])
+def remaining_numbers(message):
+    if message.from_user.id != ADMIN_ID:
+        return bot.reply_to(message, "❌ You are not the admin.")
+    parts = message.text.split(maxsplit=1)
+    if len(parts) < 2:
+        return bot.reply_to(message, "Usage: /remaining <country>")
+    country = parts[1].strip()
+    if country not in numbers_by_country:
+        return bot.reply_to(message, f"❌ Country '{country}' not found.")
+    count = len(numbers_by_country[country])
+    bot.reply_to(message, f"📊 {country} → {count} numbers left.")
 
 @bot.message_handler(commands=["deletecountry"])
 def delete_country(message):
