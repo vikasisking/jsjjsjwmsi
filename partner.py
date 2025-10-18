@@ -500,7 +500,7 @@ def send_random_number(chat_id, country=None, edit=False):
         user_messages[chat_id] = msg
 
 active_users = set()
-REQUIRED_CHANNELS = ["@freeotpss", "@freeotpss"]
+REQUIRED_CHANNELS = ["@freeotpss"]
 
 @bot.message_handler(commands=["start"])
 def start(message):
