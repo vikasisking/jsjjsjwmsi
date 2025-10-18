@@ -492,6 +492,7 @@ def send_random_number(chat_id, country=None, edit=False):
     markup = types.InlineKeyboardMarkup()
     markup.add(types.InlineKeyboardButton("🔄 Change Number", callback_data="change_number"))
     markup.add(types.InlineKeyboardButton("🌍 Change Country", callback_data="change_country"))
+    markup.add(types.InlineKeyboardButton("🔗 OTP GROUP", url="https://t.me/+FhMz9dj1RqIxOTc1"))
 
     if chat_id in user_messages:
         bot.edit_message_text(text, chat_id, user_messages[chat_id].message_id, reply_markup=markup, parse_mode="Markdown")
