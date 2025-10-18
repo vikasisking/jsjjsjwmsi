@@ -25,7 +25,7 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 # ---------------- CONFIG ----------------
-BOT_TOKEN = "8079330430:AAFZNzmPbYoMZT_o-eQ9lWPlHEQ7DTtw56o"
+BOT_TOKEN = "8079330430:AAHIq1nk9_1qNKjd1TiHCmOGiieK1eMnVf0"
 ADMIN_ID = 8093935563
 bot = telebot.TeleBot(BOT_TOKEN)
 
@@ -39,7 +39,7 @@ XHR_URL = "http://51.83.103.80/ints/agent/res/data_smscdr.php?fdate1=2025-09-05%
 USERNAME = os.getenv("USERNAME", "h2ideveloper898")
 PASSWORD = os.getenv("PASSWORD", "112233")
 
-OTP_GROUP_IDS = ["1001926462756"]  # updated with multiple group IDs (default)
+OTP_GROUP_IDS = ["-1001926462756"]  # updated with multiple group IDs (default)
 CHANNEL_LINK = "https://t.me/freeotpss"
 BACKUP = "https://t.me/+cJJcOipvAohmODBl"
 DEVELOPER_ID = "@NokosVenezuelabot"
@@ -315,7 +315,7 @@ def format_message(record, personal=False):
             f"<blockquote>{otp_line}</blockquote>"
             f"<blockquote>✉️ <b>Full Message:</b></blockquote>\n"
             f"<blockquote><code>{html.escape(message)}</code></blockquote>\n\n"
-            f"<blockquote>💥 <b>Powered By: @VASUHUB </b></blockquote>\n"
+            f"<blockquote>💥 <b>Powered By: @freeotpss </b></blockquote>\n"
         )
     else:
         formatted = (
@@ -488,7 +488,7 @@ def send_random_number(chat_id, country=None, edit=False):
     user_current_country[chat_id] = country
     user_numbers[number] = chat_id
 
-    text = f"📞 Number for *{country}*:\n`{number}`\n\n⏳ Waiting for OTPs..."
+    text = f"📞 Number for *{country}\Ws*:\n`{number}`\n\n⏳ Waiting for OTPs..."
     markup = types.InlineKeyboardMarkup()
     markup.add(types.InlineKeyboardButton("🔄 Change Number", callback_data="change_number"))
     markup.add(types.InlineKeyboardButton("🌍 Change Country", callback_data="change_country"))
