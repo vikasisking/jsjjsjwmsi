@@ -41,8 +41,8 @@ PASSWORD = os.getenv("PASSWORD", "112233")
 
 OTP_GROUP_IDS = ["1001926462756"]  # updated with multiple group IDs (default)
 CHANNEL_LINK = "https://t.me/freeotpss"
-BACKUP = "https://t.me/frrrotpss"
-DEVELOPER_ID = "@Rishifreeotp6bot"
+BACKUP = "https://t.me/+cJJcOipvAohmODBl"
+DEVELOPER_ID = "@hiden_25"
 
 # Headers for new panel
 HEADERS = {
