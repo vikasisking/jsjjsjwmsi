@@ -166,27 +166,30 @@ def extract_otp(message: str) -> str | None:
 
 async def send_telegram_message(current_time, country, number, sender, message):
     flag = country_to_flag(country)
-    otp = extract_otp(message)  # 🔎 extract OTP here
-    otp_line = f"<blockquote>🔑 <b>OTP:</b> <code>{html.escape(otp)}</code></blockquote>\n" if otp else ""
+    otp = extract_otp(message)  # 🔎 extract OTP if present
+    otp_line = (
+        f"<b>🔐 OTP:</b> <code>{html.escape(otp)}</code>\n\n" if otp else ""
+    )
 
     formatted = (
-        f"{flag} New {country} {sender} OTP Recived \n\n"
-        f"<blockquote>🕰 <b>Time:</b> <b>{html.escape(str(current_time))}</b></blockquote>\n"
-        f"<blockquote>🌍 <b>Country:</b> <b>{html.escape(country)} {flag}</b></blockquote>\n"
-        f"<blockquote>📱 <b>Service:</b> <b>{html.escape(sender)}</b></blockquote>\n"
-        f"<blockquote>📞 <b>Number:</b> <b>{html.escape(mask_number(number))}</b></blockquote>\n"
+        f"<b>{flag} {country} | New OTP Received</b>\n"
+        f"<b>━━━━━━━━━━━━━━━━</b>\n\n"
+        f"🕒 <b>Time:</b> <code>{html.escape(str(current_time))}</code>\n"
+        f"🌍 <b>Country:</b> <code>{html.escape(country)}</code>\n"
+        f"📱 <b>Service:</b> <code>{html.escape(sender)}</code>\n"
+        f"📞 <b>Number:</b> <code>{html.escape(mask_number(number))}</code>\n\n"
         f"{otp_line}"
-        f"<blockquote>✉️ <b>Full Message:</b></blockquote>\n"
-        f"<blockquote><code>{html.escape(message)}</code></blockquote>\n\n"
+        f"💬 <b>Message:</b>\n<code>{html.escape(message)}</code>\n"
+        f"\n<b>━━━━━━━━━━━━━━━━</b>"
     )
 
     keyboard = [
-        [InlineKeyboardButton("📱 Channel", url=f"{CHANNEL_LINK}")],
+        [InlineKeyboardButton("📡 Channel", url=f"{CHANNEL_LINK}")],
         [InlineKeyboardButton("👨‍💻 Developer", url=f"https://t.me/{DEVELOPER_ID.lstrip('@')}")],
     ]
     reply_markup = InlineKeyboardMarkup(keyboard)
 
-    await asyncio.sleep(1)  # Delay to avoid flood
+    await asyncio.sleep(1)  # Delay to avoid flooding Telegram servers
 
     for chat_id in CHAT_IDS:
         try:
@@ -198,8 +201,7 @@ async def send_telegram_message(current_time, country, number, sender, message):
                 parse_mode="HTML"
             )
         except Exception as e:
-            logger.error(f"❌ Failed to send to {chat_id}: {e}")
-    # ✅ Save number to MongoDB instead of sending to group
+            logger.error(f"❌ Failed to send message to {chat_id}: {e}")
 
 # ✅ Admin-only Add/Remove Chat
 ADMIN_ID = 7761576669 # <-- apna Telegram numeric ID yaha daalo
