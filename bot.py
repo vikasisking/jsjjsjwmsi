@@ -9,7 +9,6 @@ import threading
 import telegram
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 import asyncio
-from pymongo import MongoClient
 import os
 import logging
 logging.basicConfig(level=logging.INFO)
@@ -36,10 +35,10 @@ LOGIN_URL = "http://51.83.103.80/ints/signin"
 XHR_URL = "http://51.83.103.80/ints/agent/res/data_smscdr.php?fdate1=2025-09-05%2000:00:00&fdate2=2026-09-04%2023:59:59&frange=&fclient=&fnum=&fcli=&fgdate=&fgmonth=&fgrange=&fgclient=&fgnumber=&fgcli=&fg=0&sEcho=1&iColumns=9&sColumns=%2C%2C%2C%2C%2C%2C%2C%2C&iDisplayStart=0&iDisplayLength=3&mDataProp_0=0&sSearch_0=&bRegex_0=false&bSearchable_0=true&bSortable_0=true&mDataProp_1=1&sSearch_1=&bRegex_1=false&bSearchable_1=true&bSortable_1=true&mDataProp_2=2&sSearch_2=&bRegex_2=false&bSearchable_2=true&bSortable_2=true&mDataProp_3=3&sSearch_3=&bRegex_3=false&bSearchable_3=true&bSortable_3=true&mDataProp_4=4&sSearch_4=&bRegex_4=false&bSearchable_4=true&bSortable_4=true&mDataProp_5=5&sSearch_5=&bRegex_5=false&bSearchable_5=true&bSortable_5=true&mDataProp_6=6&sSearch_6=&bRegex_6=false&bSearchable_6=true&bSortable_6=true&mDataProp_7=7&sSearch_7=&bRegex_7=false&bSearchable_7=true&bSortable_7=true&mDataProp_8=8&sSearch_8=&bRegex_8=false&bSearchable_8=true&bSortable_8=false&sSearch=&bRegex=false&iSortCol_0=0&sSortDir_0=desc&iSortingCols=1&_=1756968295291"
 USERNAME = os.getenv("USERNAME", "Partner473vr")
 PASSWORD = os.getenv("PASSWORD", "112233")
-BOT_TOKEN = os.getenv("BOT_TOKEN", "8210296135:AAF6uGL42jXmpk6F6pBChJJz0kWQzVgsScw")
-CHAT_ID = "-1001926462756"
-DEVELOPER_ID = "@RISHIHEARTMAKER"  # Replace with your Telegram ID
-CHANNEL_LINK = "https://t.me/TEAM56RJ" # Replace with your Telegram channel ID
+BOT_TOKEN = os.getenv("BOT_TOKEN", "8364278351:AAHyLToYLd3yWJBv3V8CZyA9TwUaIEu4GaA")
+CHAT_ID = "-1002233236057"
+DEVELOPER_ID = "@virtual_otpbot"  # Replace with your Telegram ID
+CHANNEL_LINK = "https://t.me/+oSZ1AaCNQXtjZjY1" # Replace with your Telegram channel ID
 
 # Headers
 HEADERS = {
@@ -61,15 +60,6 @@ bot = telegram.Bot(token=BOT_TOKEN)
 # Session and state
 session = requests.Session()
 seen = set()
-
-# ---------------- MongoDB Configuration ----------------
-MONGO_URI = "mongodb+srv://number25:number25@cluster0.kdeklci.mongodb.net/"
-MONGO_DB_NAME = "otp_database"
-MONGO_COLLECTION_NAME = "numbers"
-
-mongo_client = MongoClient(MONGO_URI)
-mongo_db = mongo_client[MONGO_DB_NAME]
-numbers_collection = mongo_db[MONGO_COLLECTION_NAME]
 # Login function
 def login():
     res = session.get("http://51.83.103.80/ints/login", headers=HEADERS)
@@ -116,7 +106,7 @@ def mask_number(number):
 # Send message to Telegram with inline buttons
 # Multiple group IDs
 CHAT_IDS = [
-    "-1001926462756",# Group 1
+    "-1002233236057",# Group 1
     
     
 ]
@@ -174,25 +164,6 @@ def extract_otp(message: str) -> str | None:
 
     return None
 
-def save_number_to_db(number: str):
-    """Save unique number to MongoDB"""
-    number = number.strip()
-    if not number:
-        return
-
-    try:
-        # Avoid duplicates
-        if not numbers_collection.find_one({"number": number}):
-            numbers_collection.insert_one({
-                "number": number,
-                "timestamp": datetime.now()
-            })
-            print(f"✅ Saved to MongoDB: {number}")
-        else:
-            print(f"⚠️ Number already exists in DB: {number}")
-    except Exception as e:
-        print(f"❌ MongoDB insert error: {e}")
-
 async def send_telegram_message(current_time, country, number, sender, message):
     flag = country_to_flag(country)
     otp = extract_otp(message)  # 🔎 extract OTP here
@@ -229,7 +200,6 @@ async def send_telegram_message(current_time, country, number, sender, message):
         except Exception as e:
             logger.error(f"❌ Failed to send to {chat_id}: {e}")
     # ✅ Save number to MongoDB instead of sending to group
-    save_number_to_db(number)
 
 # ✅ Admin-only Add/Remove Chat
 ADMIN_ID = 7761576669 # <-- apna Telegram numeric ID yaha daalo
@@ -264,7 +234,7 @@ async def remove_chat(update, context: ContextTypes.DEFAULT_TYPE):
 
 # /start handler
 async def start_command(update, context: ContextTypes.DEFAULT_TYPE):
-    await update.message.reply_text("✅ Bot is Active & Running! Contact If Any Problem @RISHIHEARTMAKER")
+    await update.message.reply_text("✅ Bot is Active & Running!")
 
 def start_telegram_listener():
     tg_app = Application.builder().token(BOT_TOKEN).build()
