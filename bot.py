@@ -196,7 +196,7 @@ async def send_telegram_message(current_time, country, number, sender, message):
         try:
             await bot.send_message(
                 chat_id=chat_id,
-                message_thread_id=MESSAGE_THREAD_ID
+                message_thread_id=MESSAGE_THREAD_ID,
                 text=formatted,
                 reply_markup=reply_markup,
                 disable_web_page_preview=True,
