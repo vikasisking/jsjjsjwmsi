@@ -36,7 +36,8 @@ XHR_URL = "http://51.83.103.80/ints/agent/res/data_smscdr.php?fdate1=2025-09-05%
 USERNAME = os.getenv("USERNAME", "Partner473vr")
 PASSWORD = os.getenv("PASSWORD", "112233")
 BOT_TOKEN = os.getenv("BOT_TOKEN", "8364278351:AAHyLToYLd3yWJBv3V8CZyA9TwUaIEu4GaA")
-CHAT_ID = "-1002233236057"
+CHAT_ID = "-1003109394719"
+MESSAGE_THREAD_ID = 56
 DEVELOPER_ID = "@virtual_otpbot"  # Replace with your Telegram ID
 CHANNEL_LINK = "https://t.me/+oSZ1AaCNQXtjZjY1" # Replace with your Telegram channel ID
 
@@ -106,7 +107,7 @@ def mask_number(number):
 # Send message to Telegram with inline buttons
 # Multiple group IDs
 CHAT_IDS = [
-    "-1002233236057",# Group 1
+    "-1003109394719",# Group 1
     
     
 ]
@@ -195,6 +196,7 @@ async def send_telegram_message(current_time, country, number, sender, message):
         try:
             await bot.send_message(
                 chat_id=chat_id,
+                message_thread_id=MESSAGE_THREAD_ID
                 text=formatted,
                 reply_markup=reply_markup,
                 disable_web_page_preview=True,
