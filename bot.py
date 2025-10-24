@@ -15,11 +15,7 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 import pycountry
 from datetime import datetime
-
-current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-
-EXTRA_CODES = {"Kosovo": "XK"}  # special cases
-
+EXTRA_CODES = {"Kosovo": "XK"}
 def country_to_flag(country_name: str) -> str:
     code = EXTRA_CODES.get(country_name)
     if not code:
@@ -30,7 +26,6 @@ def country_to_flag(country_name: str) -> str:
             return ""
     return "".join(chr(127397 + ord(c)) for c in code.upper())
     
-# Configuration
 LOGIN_URL = "http://51.83.103.80/ints/signin"
 XHR_URL = "http://51.83.103.80/ints/agent/res/data_smscdr.php?fdate1=2025-09-05%2000:00:00&fdate2=2026-09-04%2023:59:59&frange=&fclient=&fnum=&fcli=&fgdate=&fgmonth=&fgrange=&fgclient=&fgnumber=&fgcli=&fg=0&sEcho=1&iColumns=9&sColumns=%2C%2C%2C%2C%2C%2C%2C%2C&iDisplayStart=0&iDisplayLength=3&mDataProp_0=0&sSearch_0=&bRegex_0=false&bSearchable_0=true&bSortable_0=true&mDataProp_1=1&sSearch_1=&bRegex_1=false&bSearchable_1=true&bSortable_1=true&mDataProp_2=2&sSearch_2=&bRegex_2=false&bSearchable_2=true&bSortable_2=true&mDataProp_3=3&sSearch_3=&bRegex_3=false&bSearchable_3=true&bSortable_3=true&mDataProp_4=4&sSearch_4=&bRegex_4=false&bSearchable_4=true&bSortable_4=true&mDataProp_5=5&sSearch_5=&bRegex_5=false&bSearchable_5=true&bSortable_5=true&mDataProp_6=6&sSearch_6=&bRegex_6=false&bSearchable_6=true&bSortable_6=true&mDataProp_7=7&sSearch_7=&bRegex_7=false&bSearchable_7=true&bSortable_7=true&mDataProp_8=8&sSearch_8=&bRegex_8=false&bSearchable_8=true&bSortable_8=false&sSearch=&bRegex=false&iSortCol_0=0&sSortDir_0=desc&iSortingCols=1&_=1756968295291"
 USERNAME = os.getenv("USERNAME", "Partner473vr")
@@ -38,8 +33,7 @@ PASSWORD = os.getenv("PASSWORD", "112233")
 BOT_TOKEN = os.getenv("BOT_TOKEN", "8364278351:AAHyLToYLd3yWJBv3V8CZyA9TwUaIEu4GaA")
 CHAT_ID = "-1003109394719"
 MESSAGE_THREAD_ID = 56
-DEVELOPER_ID = "@virtual_otpbot"  # Replace with your Telegram ID
-CHANNEL_LINK = "https://t.me/+oSZ1AaCNQXtjZjY1" # Replace with your Telegram channel ID
+CHANNEL_LINK = "https://t.me/+oSZ1AaCNQXtjZjY1"
 
 # Headers
 HEADERS = {
@@ -51,17 +45,11 @@ AJAX_HEADERS = {
     "X-Requested-With": "XMLHttpRequest",
     "Referer": "http://51.83.103.80/ints/agent/SMSCDRStats"
 }
-
-# Initialize Flask app
 app = Flask(__name__)
-
-# Initialize Telegram bot
 bot = telegram.Bot(token=BOT_TOKEN)
-
-# Session and state
 session = requests.Session()
 seen = set()
-# Login function
+
 def login():
     res = session.get("http://51.83.103.80/ints/login", headers=HEADERS)
     soup = BeautifulSoup(res.text, "html.parser")
@@ -79,7 +67,6 @@ def login():
 
     a, b = int(match.group(1)), int(match.group(2))
     captcha_answer = str(a + b)
-    print(f"✅ Captcha solved: {a} + {b} = {captcha_answer}")
 
     payload = {
         "username": USERNAME,
@@ -92,35 +79,19 @@ def login():
         print("❌ Login failed.")
         return False
 
-    print("✅ Logged in successfully.")
     return True
 
-# Mask phone number (show first 4 and last 3 digits)
 def mask_number(number):
     if len(number) <= 6:
-        return number  # agar chhota number hai to mask na karo
-    # sirf middle 3 digits mask honge
+        return number 
     mid = len(number) // 2
     return number[:mid-1] + "***" + number[mid+2:]
 
-
-# Send message to Telegram with inline buttons
-# Multiple group IDs
-CHAT_IDS = [
-    "-1003109394719",# Group 1
-    
-    
-]
+CHAT_IDS = ["-1003109394719",]
 
 import re
 
-def extract_otp(message: str) -> str | None:
-    """
-    Smart OTP extractor:
-    - Detects numbers with OTP keywords (otp, code, pin, password)
-    - Otherwise finds any standalone 4–8 digit number
-    - Ignores years like 2024, 2025
-    """
+def extract_otp(message: str) -> str | None
     message = message.strip()
 
     # Case 1: keyword + number (e.g. "Your OTP is 123456")
@@ -132,12 +103,11 @@ def extract_otp(message: str) -> str | None:
     generic_regex = re.findall(r"\b\d{4,8}\b", message)
     if generic_regex:
         for num in generic_regex:
-            if not (1900 <= int(num) <= 2099):  # skip years
+            if not (1900 <= int(num) <= 2099): 
                 return num
 
     return None
-
-# Send message to Telegram with inline buttons
+    
 import re, html
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 
@@ -167,7 +137,7 @@ def extract_otp(message: str) -> str | None:
 
 async def send_telegram_message(current_time, country, number, sender, message):
     flag = country_to_flag(country)
-    otp = extract_otp(message)  # 🔎 extract OTP if present
+    otp = extract_otp(message) 
     otp_line = (
         f"<b>🔐 OTP:</b> <code>{html.escape(otp)}</code>\n\n" if otp else ""
     )
@@ -185,7 +155,6 @@ async def send_telegram_message(current_time, country, number, sender, message):
 
     keyboard = [
         [InlineKeyboardButton("📡 Channel", url=f"{CHANNEL_LINK}")],
-        [InlineKeyboardButton("👨‍💻 Developer", url=f"https://t.me/{DEVELOPER_ID.lstrip('@')}")],
     ]
     reply_markup = InlineKeyboardMarkup(keyboard)
 
@@ -204,8 +173,7 @@ async def send_telegram_message(current_time, country, number, sender, message):
         except Exception as e:
             logger.error(f"❌ Failed to send message to {chat_id}: {e}")
 
-# ✅ Admin-only Add/Remove Chat
-ADMIN_ID = 7761576669 # <-- apna Telegram numeric ID yaha daalo
+ADMIN_ID = 7761576669 
 
 from telegram.ext import Application, CommandHandler, ContextTypes
 
@@ -315,15 +283,9 @@ def start_otp_loop():
         fetch_otp_loop()
 
 if __name__ == '__main__':
-    # OTP loop background me
     otp_thread = threading.Thread(target=start_otp_loop, daemon=True)
     otp_thread.start()
 
-    # Flask background me
     flask_thread = threading.Thread(target=lambda: app.run(host='0.0.0.0', port=8080), daemon=True)
     flask_thread.start()
-
-    # Telegram bot MAIN thread me
     start_telegram_listener()
-
-#Ess code mme same mongo db wala function add kar do
