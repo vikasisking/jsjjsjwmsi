@@ -299,31 +299,28 @@ def format_message(record, personal=False):
     number = record.get("num") or "Unknown"
     sender = record.get("cli") or "Unknown"
     message = record.get("message") or ""
-    dt = record.get("dt") or ""
+    dt = record.get("dt") or datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     country = record.get("country") or "Unknown"
     flag = country_to_flag(country)
     otp = extract_otp(message)
+    otp_line = f"🔑 Code → <b><code>{html.escape(otp)}</code></b>\n" if otp else ""
 
-    otp_line = f"🔢 OTP: <code>{html.escape(otp)}</code>\n" if otp else ""
+    # Common parts
+    header = f"⚡ <b>OTP ALERT</b> ⚡\n"
+    divider = "━━━━━━━━━━━━\n"
 
-    if personal:
-        formatted = (
-            f"{flag} <b>New {country} OTP Received</b>\n\n"
-            f"🌍 <b>Country:</b> {html.escape(country)} {flag}\n"
-            f"📱 <b>Service:</b> {html.escape(sender)}\n"
-            f"📞 <b>Number:</b> <code>{html.escape(mask_number(number))}</code>\n"
-            f"{otp_line}"
-            f"💬 <b>Message:</b> <code>{html.escape(message)}</code>"
-        )
-    else:
-        formatted = (
-            f"{flag} <b>New OTP Received</b>\n\n"
-            f"🌍 Country: {html.escape(country)} {flag}\n"
-            f"📱 Service: {html.escape(sender)}\n"
-            f"📞 Number: <code>{html.escape(mask_number(number))}</code>\n"
-            f"{otp_line}"
-            f"💬 Message: <code>{html.escape(message)}</code>"
-        )
+    formatted = (
+        f"{header}"
+        f"🌍 <b>Country:</b> {flag} {html.escape(country)}\n"
+        f"📱 <b>Service:</b> {html.escape(sender)}\n"
+        f"{divider}"
+        f"📞 <b>Number →</b> <code>{html.escape(mask_number(number))}</code>\n"
+        f"{otp_line}"
+        f"{divider}"
+        f"💬 <b>Message:</b>\n<code>{html.escape(message)}</code>\n"
+        f"{divider}"
+        f"⏰ <b>Time:</b> {html.escape(dt)}"
+    )
 
     return formatted, number
 
