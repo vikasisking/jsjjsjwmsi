@@ -303,28 +303,28 @@ def format_message(record, personal=False):
     country = record.get("country") or "Unknown"
     flag = country_to_flag(country)
     otp = extract_otp(message)
-    otp_line = f"<b>OTP:</b> <code>{html.escape(otp)}</code>\n" if otp else ""
+
+    otp_line = f"🔢 OTP: <code>{html.escape(otp)}</code>\n" if otp else ""
 
     if personal:
         formatted = (
-            f"{flag} New {country} {sender} OTP Recived \n\n"
-            f"<blockquote>🌍 <b>Country:</b> <b>{html.escape(country)} {flag}</b></blockquote>\n"
-            f"<blockquote>📱 <b>Service:</b> <b>{html.escape(sender)}</b></blockquote>\n"
-            f"<blockquote>📞 <b>Number:</b> <b>{html.escape(mask_number(number))}</b></blockquote>\n"
-            f"<blockquote>{otp_line}</blockquote>"
-            f"<blockquote>✉️ <b>Full Message:</b></blockquote>\n"
-            f"<blockquote><code>{html.escape(message)}</code></blockquote>\n"
+            f"{flag} <b>New {country} OTP Received</b>\n\n"
+            f"🌍 <b>Country:</b> {html.escape(country)} {flag}\n"
+            f"📱 <b>Service:</b> {html.escape(sender)}\n"
+            f"📞 <b>Number:</b> <code>{html.escape(mask_number(number))}</code>\n"
+            f"{otp_line}"
+            f"💬 <b>Message:</b> <code>{html.escape(message)}</code>"
         )
     else:
         formatted = (
-            f"{flag} New {country} {sender} OTP Recived \n\n"
-            f"<blockquote>🌍 <b>Country:</b> <b>{html.escape(country)} {flag}</b></blockquote>\n"
-            f"<blockquote>📱 <b>Service:</b> <b>{html.escape(sender)}</b></blockquote>\n"
-            f"<blockquote>📞 <b>Number:</b> <b>{html.escape(mask_number(number))}</b></blockquote>\n"
-            f"<blockquote>{otp_line}</blockquote>"
-            f"<blockquote>✉️ <b>Full Message:</b></blockquote>\n"
-            f"<blockquote><code>{html.escape(message)}</code></blockquote>\n"
+            f"{flag} <b>New OTP Received</b>\n\n"
+            f"🌍 Country: {html.escape(country)} {flag}\n"
+            f"📱 Service: {html.escape(sender)}\n"
+            f"📞 Number: <code>{html.escape(mask_number(number))}</code>\n"
+            f"{otp_line}"
+            f"💬 Message: <code>{html.escape(message)}</code>"
         )
+
     return formatted, number
 
 def broadcast_message(message):
