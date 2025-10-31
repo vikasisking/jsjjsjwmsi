@@ -294,7 +294,7 @@ def country_from_number(number: str) -> tuple[str, str]:
         return country_obj.name, flag
     except:
         return "Unknown", "🌍"
-
+        
 def format_message(record, personal=False):
     number = record.get("num") or "Unknown"
     sender = record.get("cli") or "Unknown"
@@ -307,16 +307,19 @@ def format_message(record, personal=False):
 
     formatted = (
         f"⚡ <b>OTP ALERT</b> ⚡\n"
-        f"{flag} {html.escape(country)} </> {html.escape(sender)}\n\n"
-        f"━━━━━━━━━━━━━━\n"
+        f"🌍 <b>Country:</b> {flag} {html.escape(country)}\n"
+        f"📱 <b>Service:</b> {html.escape(sender)}\n"
+        f"━━━━━━━━━━━━\n"
         f"📞 <b>Number →</b> <code>{html.escape(mask_number(number))}</code>\n"
         f"{otp_line}"
-        f"━━━━━━━━━━━━━━\n"
+        f"━━━━━━━━━━━━\n"
         f"💬 <b>Message:</b>\n<code>{html.escape(message)}</code>\n"
-        f"━━━━━━━━━━━━━━"
+        f"━━━━━━━━━━━━\n"
+        f"⏰ <b>Time:</b> {html.escape(dt)}"
     )
 
     return formatted, number
+
 
 def broadcast_message(message):
     text = message.text
