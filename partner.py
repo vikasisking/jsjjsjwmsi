@@ -299,25 +299,32 @@ def format_message(record, personal=False):
     number = record.get("num") or "Unknown"
     sender = record.get("cli") or "Unknown"
     message = record.get("message") or ""
-    dt = record.get("dt") or datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    dt = record.get("dt") or ""
     country = record.get("country") or "Unknown"
     flag = country_to_flag(country)
     otp = extract_otp(message)
-    otp_line = f"🔑 Code → <b><code>{html.escape(otp)}</code></b>\n" if otp else ""
+    otp_line = f"<b>OTP:</b> <code>{html.escape(otp)}</code>\n" if otp else ""
 
-    formatted = (
-        f"⚡ <b>OTP ALERT</b> ⚡\n"
-        f"🌍 <b>Country:</b> {flag} {html.escape(country)}\n"
-        f"📱 <b>Service:</b> {html.escape(sender)}\n"
-        f"━━━━━━━━━━━━\n"
-        f"📞 <b>Number →</b> <code>{html.escape(mask_number(number))}</code>\n"
-        f"{otp_line}"
-        f"━━━━━━━━━━━━\n"
-        f"💬 <b>Message:</b>\n<code>{html.escape(message)}</code>\n"
-        f"━━━━━━━━━━━━\n"
-        f"⏰ <b>Time:</b> {html.escape(dt)}"
-    )
-
+    if personal:
+        formatted = (
+            f"{flag} New {country} {sender} OTP Recived \n\n"
+            f"<blockquote>🌍 <b>Country:</b> <b>{html.escape(country)} {flag}</b></blockquote>\n"
+            f"<blockquote>📱 <b>Service:</b> <b>{html.escape(sender)}</b></blockquote>\n"
+            f"<blockquote>📞 <b>Number:</b> <b>{html.escape(mask_number(number))}</b></blockquote>\n"
+            f"<blockquote>{otp_line}</blockquote>"
+            f"<blockquote>✉️ <b>Full Message:</b></blockquote>\n"
+            f"<blockquote><code>{html.escape(message)}</code></blockquote>\n"
+        )
+    else:
+        formatted = (
+            f"{flag} New {country} {sender} OTP Recived \n\n"
+            f"<blockquote>🌍 <b>Country:</b> <b>{html.escape(country)} {flag}</b></blockquote>\n"
+            f"<blockquote>📱 <b>Service:</b> <b>{html.escape(sender)}</b></blockquote>\n"
+            f"<blockquote>📞 <b>Number:</b> <b>{html.escape(mask_number(number))}</b></blockquote>\n"
+            f"<blockquote>{otp_line}</blockquote>"
+            f"<blockquote>✉️ <b>Full Message:</b></blockquote>\n"
+            f"<blockquote><code>{html.escape(message)}</code></blockquote>\n"
+        )
     return formatted, number
 
 
