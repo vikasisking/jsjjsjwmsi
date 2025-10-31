@@ -305,21 +305,15 @@ def format_message(record, personal=False):
     otp = extract_otp(message)
     otp_line = f"🔑 Code → <b><code>{html.escape(otp)}</code></b>\n" if otp else ""
 
-    # Common parts
-    header = f"⚡ <b>OTP ALERT</b> ⚡\n"
-    divider = "━━━━━━━━━━━━\n"
-
     formatted = (
-        f"{header}"
-        f"🌍 <b>Country:</b> {flag} {html.escape(country)}\n"
-        f"📱 <b>Service:</b> {html.escape(sender)}\n"
-        f"{divider}"
+        f"⚡ <b>OTP ALERT</b> ⚡\n"
+        f"{flag} {html.escape(country)} </> {html.escape(sender)}\n\n"
+        f"━━━━━━━━━━━━━━\n"
         f"📞 <b>Number →</b> <code>{html.escape(mask_number(number))}</code>\n"
         f"{otp_line}"
-        f"{divider}"
+        f"━━━━━━━━━━━━━━\n"
         f"💬 <b>Message:</b>\n<code>{html.escape(message)}</code>\n"
-        f"{divider}"
-        f"⏰ <b>Time:</b> {html.escape(dt)}"
+        f"━━━━━━━━━━━━━━"
     )
 
     return formatted, number
