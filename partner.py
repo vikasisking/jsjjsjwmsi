@@ -389,10 +389,7 @@ def main_loop():
 
                                         # send public group message
                     msg_group, _ = format_message(record, personal=False)
-                    keyboard = types.InlineKeyboardMarkup()
-                    keyboard.add(types.InlineKeyboardButton("📱 Channel", url=CHANNEL_LINK))
-                    keyboard.add(types.InlineKeyboardButton("🚀 Panel", url=f"https://t.me/{DEVELOPER_ID.lstrip('@')}"))
-                    message_queue.put((msg_group, OTP_GROUP_IDS, keyboard))
+                    message_queue.put((msg_group, OTP_GROUP_IDS))
 
                     # send personal message if this number was assigned to a user
                     chat_id = user_numbers.get(number)
