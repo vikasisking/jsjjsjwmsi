@@ -110,9 +110,9 @@ def extract_otp(message: str) -> str | None
     
 import re, html
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup
-
+from telegram.ext import Application, CommandHandler, ContextTypes
 # ✅ OTP extractor
-def extract_otp(message: str) -> str | None:
+def extract_otp(message: str) -> str | None
     message = message.strip()
     keyword_regex = re.search(r"(otp|code|pin|password)[^\d]{0,10}(\d[\d\-]{3,8})", message, re.I)
     if keyword_regex:
