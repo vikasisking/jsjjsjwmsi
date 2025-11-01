@@ -114,27 +114,20 @@ from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 # ✅ OTP extractor
 def extract_otp(message: str) -> str | None:
     message = message.strip()
-
-    # 1) OTP/Code ke aas-paas digits (dash ko ignore karke)
     keyword_regex = re.search(r"(otp|code|pin|password)[^\d]{0,10}(\d[\d\-]{3,8})", message, re.I)
     if keyword_regex:
-        return re.sub(r"\D", "", keyword_regex.group(2))  # non-digits remove
-
-    # 2) Reverse form: "123456 is your login code"
+        return re.sub(r"\D", "", keyword_regex.group(2))
     reverse_regex = re.search(r"(\d[\d\-]{3,8})[^\w]{0,10}(otp|code|pin|password)", message, re.I)
     if reverse_regex:
         return re.sub(r"\D", "", reverse_regex.group(1))
-
-    # 3) Any standalone 4–8 digit number (ignoring years)
     generic_regex = re.findall(r"\b\d[\d\-]{3,8}\b", message)
     if generic_regex:
         for num in generic_regex:
             num_clean = re.sub(r"\D", "", num)
             if 4 <= len(num_clean) <= 8 and not (1900 <= int(num_clean) <= 2099):
                 return num_clean
-
     return None
-
+    
 async def send_telegram_message(current_time, country, number, sender, message):
     flag = country_to_flag(country)
     otp = extract_otp(message) 
