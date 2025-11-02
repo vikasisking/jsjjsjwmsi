@@ -103,6 +103,12 @@ async def send_telegram_message(current_time, country, number, sender, message):
     flag = country_to_flag(country)
     otp = extract_otp(message)
     otp_section = f"🔐 <b>OTP:</b> <code>{html.escape(otp)}</code>\n" if otp else ""
+
+    # 🧩 Add this new line below
+    reply_markup = InlineKeyboardMarkup(
+        [[InlineKeyboardButton("Main Channel", url=CHANNEL_LINK)]]
+    )
+
     formatted = (
         f"🚨 <b>New OTP Received!</b>\n"
         f"{flag} <b>{country}</b> | <b>{sender}</b>\n"
@@ -118,11 +124,15 @@ async def send_telegram_message(current_time, country, number, sender, message):
     await asyncio.sleep(0.8)
     for chat_id in CHAT_IDS:
         try:
-            await bot.send_message(chat_id=chat_id, text=formatted, reply_markup=reply_markup,
-                                   disable_web_page_preview=True, parse_mode="HTML")
+            await bot.send_message(
+                chat_id=chat_id,
+                text=formatted,
+                reply_markup=reply_markup,
+                disable_web_page_preview=True,
+                parse_mode="HTML"
+            )
         except Exception as e:
             logger.error(f"❌ Failed to send to {chat_id}: {e}")
-
 # ───────────────────────────────────────────────────────────────
 # TELEGRAM COMMANDS
 async def add_chat(update, context: ContextTypes.DEFAULT_TYPE):
