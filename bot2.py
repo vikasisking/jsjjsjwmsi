@@ -102,19 +102,18 @@ def extract_otp(message: str) -> str | None:
 async def send_telegram_message(current_time, country, number, sender, message):
     flag = country_to_flag(country)
     otp = extract_otp(message)
-    otp_line = f"<b>🔐 OTP:</b> <code>{html.escape(otp)}</code>\n\n" if otp else ""
+    otp_section = f"🔐 <b>OTP:</b> <code>{html.escape(otp)}</code>\n" if otp else ""
     formatted = (
-        f"<b>{flag} {country} OTP Received</b>\n"
-        f"<b>━━━━━━━━━━━━━━━━</b>\n"
-        f"🌍 <b>Country:</b> <code>{html.escape(country)}</code>\n"
-        f"📱 <b>Service:</b> <code>{html.escape(sender)}</code>\n"
-        f"📞 <b>Number:</b> <code>{html.escape(mask_number(number))}</code>\n\n"
-        f"{otp_line}"
-        f"💬 <b>Message:</b>\n<code>{html.escape(message)}</code>\n"
-        f"<b>━━━━━━━━━━━━━━━━</b>"
+        f"🚨 <b>New OTP Received!</b>\n"
+        f"{flag} <b>{country}</b> | <b>{sender}</b>\n"
+        f"━━━━━━━━━━━━━━━━━━━\n"
+        f"📞 <b>Number:</b> <code>{html.escape(mask_number(number))}</code>\n"
+        f"{otp_section}"
+        f"━━━━━━━━━━━━━━━━━━━\n"
+        f"💬 <b>Full Message:</b>\n"
+        f"<code>{html.escape(message)}</code>\n"
+        f"━━━━━━━━━━━━━━━━━━━"
     )
-
-    reply_markup = InlineKeyboardMarkup([[InlineKeyboardButton("📡 Channel", url=CHANNEL_LINK)]])
 
     await asyncio.sleep(0.8)
     for chat_id in CHAT_IDS:
