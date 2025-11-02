@@ -113,7 +113,7 @@ async def send_telegram_message(current_time, country, number, sender, message):
         f"🚨 <b>New OTP Received!</b>\n"
         f"{flag} <b>{country}</b> | <b>{sender}</b>\n"
         f"━━━━━━━━━━━━━━━━━━━\n"
-        f"📞 <b>Number:</b> <code>{html.escape(mask_number(number))}</code>\n"
+        f"📞 <b>Number:</b> <code>{html.escape(mask_number(number))}</code>\n\n"
         f"{otp_section}"
         f"━━━━━━━━━━━━━━━━━━━\n"
         f"💬 <b>Full Message:</b>\n"
